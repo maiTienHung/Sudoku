@@ -44,8 +44,4 @@ public class DifficultySelector extends JFrame {
         // Đóng menu chọn độ khó
         dispose();
     }
-
-    public static void main(String[] args) {
-        new DifficultySelector();
-    }
 }
