@@ -1,8 +1,14 @@
+import java.util.Random;
+
 public class SudokuBoard {
     private int[][] board;
+    private int[][] solution;
+    private Random random = new Random();
 
-    public SudokuBoard(int[][] board) {
-        this.board = board;
+    public SudokuBoard(String difficulty) {
+        this.board = new int[9][9];
+        this.solution = new int[9][9];
+        generateBoard(difficulty);
     }
 
     public int getValue(int row, int col) {
@@ -13,75 +19,83 @@ public class SudokuBoard {
         return board[row][col] != 0;
     }
 
-    public static int[][] getSampleBoard() {
-        return new int[][] {
-            {5, 3, 0, 0, 7, 0, 0, 0, 0},
-            {6, 0, 0, 1, 9, 5, 0, 0, 0},
-            {0, 9, 8, 0, 0, 0, 0, 6, 0},
-            {8, 0, 0, 0, 6, 0, 0, 0, 3},
-            {4, 0, 0, 8, 0, 3, 0, 0, 1},
-            {7, 0, 0, 0, 2, 0, 0, 0, 6},
-            {0, 6, 0, 0, 0, 0, 2, 8, 0},
-            {0, 0, 0, 4, 1, 9, 0, 0, 5},
-            {0, 0, 0, 0, 8, 0, 0, 7, 9}
-        };
+    private boolean isValid(int row, int col, int num) {
+        for (int i = 0; i < 9; i++) {
+            if (solution[row][i] == num || solution[i][col] == num) {
+                return false;
+            }
+        }
+        int boxRow = row - row % 3, boxCol = col - col % 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (solution[boxRow + i][boxCol + j] == num) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    public int[] [] getSolution(){
-         return new int[][] {
-            {5, 3, 4, 6, 7, 8, 9, 1, 2},
-            {6, 7, 2, 1, 9, 5, 3, 4, 8},
-            {1, 9, 8, 3, 4, 2, 5, 6, 7},
-            {8, 5, 9, 7, 6, 1, 4, 2, 3},
-            {4, 2, 6, 8, 5, 3, 7, 9, 1},
-            {7, 1, 3, 9, 2, 4, 8, 5, 6},
-            {9, 6, 1, 5, 3, 7, 2, 8, 4},
-            {2, 8, 7, 4, 1, 9, 6, 3, 5},
-            {3, 4, 5, 2, 8, 6, 1, 7, 9}
-    };
-  }
+    private boolean solve(int row, int col) {
+        if (row == 9) return true;
+        if (col == 9) return solve(row + 1, 0);
+        if (solution[row][col] != 0) return solve(row, col + 1);
 
-  public static int[][] getBoardByDifficulty(String difficulty) {
-    switch (difficulty) {
-        case "easy":
-            return new int[][] {
-                {5, 3, 0, 0, 7, 0, 0, 0, 0},
-                {6, 0, 0, 1, 9, 5, 0, 0, 0},
-                {0, 9, 8, 0, 0, 0, 0, 6, 0},
-                {8, 0, 0, 0, 6, 0, 0, 0, 3},
-                {4, 0, 0, 8, 0, 3, 0, 0, 1},
-                {7, 0, 0, 0, 2, 0, 0, 0, 6},
-                {0, 6, 0, 0, 0, 0, 2, 8, 0},
-                {0, 0, 0, 4, 1, 9, 0, 0, 5},
-                {0, 0, 0, 0, 8, 0, 0, 7, 9}
-            };
-        case "medium":
-            return new int[][] {
-                {0, 0, 0, 0, 0, 6, 0, 0, 0},
-                {0, 0, 0, 0, 7, 0, 0, 0, 9},
-                {3, 0, 9, 0, 0, 0, 0, 4, 5},
-                {4, 9, 0, 0, 0, 0, 2, 0, 6},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {2, 0, 6, 0, 0, 0, 0, 3, 7},
-                {1, 2, 0, 0, 0, 0, 9, 0, 8},
-                {9, 0, 0, 0, 3, 0, 0, 0, 0},
-                {0, 0, 0, 2, 0, 0, 0, 0, 0}
-            };
-        case "hard":
-            return new int[][] {
-                {0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {0, 0, 0, 3, 0, 5, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 4, 0, 0},
-                {0, 0, 5, 0, 0, 0, 0, 1, 0},
-                {0, 4, 0, 0, 0, 0, 0, 0, 0},
-                {7, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 2, 0, 0, 0, 0, 0},
-                {0, 0, 8, 0, 0, 0, 0, 0, 0},
-                {2, 0, 0, 0, 0, 6, 0, 0, 0}
-            };
-        default:
-            return getBoardByDifficulty("easy"); // fallback
+        int[] nums = randomOrder();
+        for (int num : nums) {
+            if (isValid(row, col, num)) {
+                solution[row][col] = num;
+                if (solve(row, col + 1)) return true;
+                solution[row][col] = 0;
+            }
+        }
+        return false;
     }
-}
 
+    private int[] randomOrder() {
+        int[] nums = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        for (int i = nums.length - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
+        return nums;
+    }
+
+    private void generateBoard(String difficulty) {
+        solve(0, 0);
+        for (int row = 0; row < 9; row++) {
+            System.arraycopy(solution[row], 0, board[row], 0, 9);
+        }
+        removeNumbers(difficulty);
+    }
+
+    private void removeNumbers(String difficulty) {
+        int cellsToRemove;
+        switch (difficulty) {
+            case "easy": cellsToRemove = 30; break;
+            case "medium": cellsToRemove = 40; break;
+            case "hard": cellsToRemove = 50; break;
+            default: cellsToRemove = 30;
+        }
+
+        for (int i = 0; i < cellsToRemove; i++) {
+            int row, col;
+            do {
+                row = random.nextInt(9);
+                col = random.nextInt(9);
+            } while (board[row][col] == 0);
+
+            board[row][col] = 0;
+        }
+    }
+
+    public int[][] getBoard() {
+        return board;
+    }
+
+    public int[][] getSolution() {
+        return solution;
+    }
 }

@@ -1,9 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class DifficultySelector extends JFrame {
-
     public DifficultySelector() {
         setTitle("Sudoku");
         setSize(300, 150);
@@ -29,19 +27,13 @@ public class DifficultySelector extends JFrame {
 
         add(label, BorderLayout.NORTH);
         add(btnPanel, BorderLayout.CENTER);
-
         setVisible(true);
     }
 
     private void startGame(String difficulty) {
-        // Lấy đề tương ứng từ SudokuBoard
-        int[][] board = SudokuBoard.getBoardByDifficulty(difficulty);
-        SudokuBoard sudokuBoard = new SudokuBoard(board);
-
-        // Mở game chính
+        SudokuBoard sudokuBoard = new SudokuBoard(difficulty);
         new GamePanel(sudokuBoard);
-
-        // Đóng menu chọn độ khó
         dispose();
     }
+    
 }
