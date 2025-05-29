@@ -88,6 +88,7 @@ public class GamePanel extends JFrame {
                     int value = Integer.parseInt(text);
                     if (value == solution[row][col]) {
                         cells[row][col].setBackground(new Color(200, 255, 200)); //  Đúng = xanh
+                        cells[row][col].setEditable(false); // khóa lại
                     } else {
                         cells[row][col].setBackground(new Color(255, 200, 200)); //  Sai = đỏ
                     }
