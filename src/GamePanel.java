@@ -12,7 +12,7 @@ public class GamePanel extends JFrame {
     public GamePanel(SudokuBoard board) {
         this.board = board;
 
-        setTitle("Sudoku Game");
+        setTitle("Sudoku");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(550, 600);
         setLayout(new BorderLayout());
