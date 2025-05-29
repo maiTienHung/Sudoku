@@ -8,11 +8,14 @@ public class GamePanel extends JFrame {
     private SudokuGame game;
 
     public GamePanel(SudokuBoard board) {
+        int WIDTH = 550;
+        int HEIGHT = 600;
         this.game = new SudokuGame(board);
         setTitle("Sudoku");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(550, 600);
+        setSize(WIDTH, HEIGHT);
         setLayout(new BorderLayout());
+        setBounds(500, 125, WIDTH, HEIGHT);
 
         JPanel gridPanel = new JPanel(new GridLayout(SIZE, SIZE));
         for (int row = 0; row < SIZE; row++) {
@@ -25,7 +28,7 @@ public class GamePanel extends JFrame {
                 if (value != 0) {
                     cell.setText(String.valueOf(value));
                     cell.setEditable(false);
-                    cell.setBackground(new Color(220, 220, 220));
+                    cell.setBackground(Color.WHITE);
                 }
 
                 cells[row][col] = cell;

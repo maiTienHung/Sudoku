@@ -76,7 +76,7 @@ public class SudokuBoard {
         switch (difficulty) {
             case "easy": cellsToRemove = 30; break;
             case "medium": cellsToRemove = 40; break;
-            case "hard": cellsToRemove = 50; break;
+            case "hard": cellsToRemove = 60; break;
             default: cellsToRemove = 30;
         }
 
