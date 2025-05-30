@@ -1,9 +1,13 @@
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class SudokuBoard {
     private int[][] board;
     private int[][] solution;
+    
     private Random random = new Random();
+    private String difficulty;
 
     public SudokuBoard(String difficulty) {
         this.board = new int[9][9];
@@ -18,7 +22,7 @@ public class SudokuBoard {
     public boolean isFixedCell(int row, int col) {
         return board[row][col] != 0;
     }
-
+    //chon so tu 1-> 9 neu hop le gan vao o
     private boolean isValid(int row, int col, int num) {
         for (int i = 0; i < 9; i++) {
             if (solution[row][i] == num || solution[i][col] == num) {
@@ -35,7 +39,7 @@ public class SudokuBoard {
         }
         return true;
     }
-
+    //backtracking algorithm
     private boolean solve(int row, int col) {
         if (row == 9) return true;
         if (col == 9) return solve(row + 1, 0);
@@ -62,7 +66,7 @@ public class SudokuBoard {
         }
         return nums;
     }
-
+    // che do co ban
     private void generateBoard(String difficulty) {
         solve(0, 0);
         for (int row = 0; row < 9; row++) {
@@ -70,7 +74,7 @@ public class SudokuBoard {
         }
         removeNumbers(difficulty);
     }
-
+  
     private void removeNumbers(String difficulty) {
         int cellsToRemove;
         switch (difficulty) {
@@ -98,4 +102,10 @@ public class SudokuBoard {
     public int[][] getSolution() {
         return solution;
     }
+
+    public String getDifficulty(){
+        return difficulty;
+    }
+
+
 }

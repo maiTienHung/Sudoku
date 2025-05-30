@@ -4,13 +4,19 @@ import java.util.List;
 import java.util.Random;
 
 public class SudokuGame {
+    private SudokuBoard sudokuBoard;
     private int[][] board;
     private int[][] solution;
     private Random random = new Random();
 
     public SudokuGame(SudokuBoard sudokuBoard) {
+        this.sudokuBoard = sudokuBoard;
         this.board = sudokuBoard.getBoard();
         this.solution = sudokuBoard.getSolution();
+    }
+
+     public SudokuBoard getBoard() {
+        return sudokuBoard;
     }
 
     public boolean checkAnswers(int row, int col, int value) {
