@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -16,6 +18,9 @@ public class GamePanel extends JFrame {
     private JPanel leftPanel;
     private JPanel controlPanel;
 
+    private JLabel mistake;
+
+
     private JTextField selectedCell = null;
 
     public GamePanel(SudokuBoard board) {
@@ -31,10 +36,16 @@ public class GamePanel extends JFrame {
         initComponents(board);
     }
     
+    /**
+     * @param board
+     */
     public void initComponents(SudokuBoard board){
 
         Color darkcolor = new Color(5, 77, 120);
         Color lightColor = new Color(0, 0, 0, 60);
+
+        
+
 
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.WHITE);
@@ -48,6 +59,7 @@ public class GamePanel extends JFrame {
         leftPanel.setBackground(Color.white);
         leftPanel.setBounds(0, 0, 500, 600);
         leftPanel.setLayout(null);
+        mainPanel.add(leftPanel);
 
         //controlPanel
         controlPanel = new JPanel();
@@ -56,8 +68,8 @@ public class GamePanel extends JFrame {
         controlPanel.setLayout(null);
         mainPanel.add(controlPanel);
 
-
         JPanel gridPanel = new JPanel(new GridLayout(SIZE, SIZE)) ;
+        
        
         // Tạo các ô nhập cho lưới Sudoku
         for (int row = 0; row < SIZE; row++) {
@@ -65,7 +77,7 @@ public class GamePanel extends JFrame {
                 JTextField cell = new JTextField();
                 cell.setHorizontalAlignment(JTextField.CENTER);
                 cell.setFont(new Font("Arial", Font.BOLD, 20));
-
+                ((AbstractDocument) cell.getDocument()).setDocumentFilter(new DigitFilters());
                 int value = board.getValue(row, col);
                 if (value != 0) {  // Ô cố định
                     cell.setText(String.valueOf(value));
@@ -94,19 +106,18 @@ public class GamePanel extends JFrame {
 
         gridPanel.setBounds(0, 60, 500, 500);
         leftPanel.add(gridPanel);
-        mainPanel.add(leftPanel);
 
         // chon độ khó
-
-        JLabel label = new JLabel("Chọn độ khó:");
-        label.setFont(new Font("Arial", Font.BOLD, 12));
+        JLabel label = new JLabel("Difficulty:");
+        label.setFont(new Font("Arial", Font.BOLD, 16));
         label.setBackground(Color.white);
         label.setForeground(darkcolor);
         label.setBorder(null);
         label.setBounds(5,5, 100,50);
         leftPanel.add(label);
        
-        JButton easyBtn = new JButton("Dễ");
+        JButton easyBtn = new JButton("Easy");
+        easyBtn.setFont(new Font("Arial", Font.BOLD, 16));
         easyBtn.setFocusPainted(false);
         easyBtn.setForeground(darkcolor);
         easyBtn.setBackground(Color.white);
@@ -115,7 +126,8 @@ public class GamePanel extends JFrame {
         easyBtn.addActionListener(e -> startGame("easy"));
         leftPanel.add(easyBtn);
 
-        JButton mediumBtn = new JButton("Trung bình");
+        JButton mediumBtn = new JButton("Medium");
+        mediumBtn.setFont(new Font("Arial", Font.BOLD, 16));
         mediumBtn.setFocusPainted(false);
         mediumBtn.setForeground(darkcolor);
         mediumBtn.setBackground(Color.white);
@@ -124,7 +136,8 @@ public class GamePanel extends JFrame {
         mediumBtn.addActionListener(e -> startGame("medium"));
         leftPanel.add(mediumBtn);
 
-        JButton hardBtn = new JButton("Khó");
+        JButton hardBtn = new JButton("Hard");
+        hardBtn.setFont(new Font("Arial", Font.BOLD, 16));        
         hardBtn.setFocusPainted(false);
         hardBtn.setForeground(darkcolor);
         hardBtn.setBackground(Color.white);
@@ -168,6 +181,7 @@ public class GamePanel extends JFrame {
         }
     });
         controlPanel.add(deleteButton);
+        
       
 
         //Nút newgame 
@@ -200,6 +214,12 @@ public class GamePanel extends JFrame {
        controlPanel.add(numberPad);
 
 
+        //hien thi loi sai cua nguoi choiu
+        mistake = new JLabel("Mistake:0/3");
+        mistake.setFont(new Font("Tahoma", Font.BOLD, 15));
+        mistake.setForeground(darkcolor);
+        mistake.setBounds(0, 0, 100, 50);
+        controlPanel.add(mistake);
 
         setVisible(true);
     }
@@ -219,13 +239,15 @@ public class GamePanel extends JFrame {
                         cells[row][col].setBackground(new Color(173, 216, 230));
                         cells[row][col].setEditable(false);
                     } else {
-                        cells[row][col].setBackground(new Color(255, 200, 200));
                         mistakeCount++;
-                        if (mistakeCount > 3) {
+                        mistake.setText("Mistake:" +mistakeCount +"/3");
+                        cells[row][col].setBackground(new Color(255, 200, 200));
+                        if (mistakeCount >= 3) {
                             endGame();
                             return;
-                        }
+                        }   
                     }
+                    return;
                 } catch (NumberFormatException e) {
                     cells[row][col].setBackground(Color.YELLOW);
                 }
@@ -332,4 +354,7 @@ public class GamePanel extends JFrame {
             super.paintComponent(g);
         }
     }
-}   
+    
+    
+}
+

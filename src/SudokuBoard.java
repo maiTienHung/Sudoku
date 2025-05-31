@@ -66,7 +66,7 @@ public class SudokuBoard {
         }
         return nums;
     }
-    // che do co ban
+   //tao game 
     private void generateBoard(String difficulty) {
         solve(0, 0);
         for (int row = 0; row < 9; row++) {
