@@ -20,8 +20,11 @@ public class SudokuBoard {
     }
 
     public boolean isFixedCell(int row, int col) {
-        return board[row][col] != 0;
+        return fixedCell[row][col];
     }
+
+    private boolean[][] fixedCell = new boolean[9][9];
+
     //chon so tu 1-> 9 neu hop le gan vao o
     private boolean isValid(int row, int col, int num) {
         for (int i = 0; i < 9; i++) {
@@ -39,6 +42,7 @@ public class SudokuBoard {
         }
         return true;
     }
+
     //backtracking algorithm
     private boolean solve(int row, int col) {
         if (row == 9) return true;
@@ -73,6 +77,12 @@ public class SudokuBoard {
             System.arraycopy(solution[row], 0, board[row], 0, 9);
         }
         removeNumbers(difficulty);
+
+        for (int row = 0; row < 9; row++){
+            for (int col = 0; col < 9; col++) {
+                fixedCell[row][col] = board[row][col] != 0;
+            }
+        }
     }
   
     private void removeNumbers(String difficulty) {

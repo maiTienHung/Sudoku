@@ -77,7 +77,6 @@ public class GamePanel extends JFrame {
                 JTextField cell = new JTextField();
                 cell.setHorizontalAlignment(JTextField.CENTER);
                 cell.setFont(new Font("Arial", Font.BOLD, 20));
-                ((AbstractDocument) cell.getDocument()).setDocumentFilter(new DigitFilters());
                 int value = board.getValue(row, col);
                 if (value != 0) {  // Ô cố định
                     cell.setText(String.valueOf(value));
@@ -174,12 +173,9 @@ public class GamePanel extends JFrame {
         deleteButton.setBackground(lightColor);
         deleteButton.setBorder(null);
         deleteButton.setBounds(200,60,50,50);
-        deleteButton.addActionListener(e -> {
-        if (selectedCell != null && selectedCell.isEditable()) {
-            selectedCell.setText(""); // Xóa nội dung ô đang chọn
-            selectedCell.setBackground(Color.WHITE); // Đặt lại màu nền
-        }
-    });
+        deleteButton.addActionListener(e -> delete());
+    
+    
         controlPanel.add(deleteButton);
         
       
@@ -214,7 +210,7 @@ public class GamePanel extends JFrame {
        controlPanel.add(numberPad);
 
 
-        //hien thi loi sai cua nguoi choiu
+        //hien thi loi sai cua nguoi choi
         mistake = new JLabel("Mistake:0/3");
         mistake.setFont(new Font("Tahoma", Font.BOLD, 15));
         mistake.setForeground(darkcolor);
@@ -239,6 +235,7 @@ public class GamePanel extends JFrame {
                         cells[row][col].setBackground(new Color(173, 216, 230));
                         cells[row][col].setEditable(false);
                     } else {
+                        cells[row][col].setBackground(new Color(255, 200, 200));
                         mistakeCount++;
                         mistake.setText("Mistake:" +mistakeCount +"/3");
                         cells[row][col].setBackground(new Color(255, 200, 200));
@@ -283,6 +280,13 @@ public class GamePanel extends JFrame {
         cells[row][col].setText(String.valueOf(game.getSolutionValue(row, col)));// điền đáp án đúng
         cells[row][col].setBackground(new Color(176, 196, 222));
         cells[row][col].setEditable(false);
+    }
+
+    private void delete(){
+         if (selectedCell != null && selectedCell.isEditable()) {
+            selectedCell.setText(""); // Xóa nội dung ô đang chọn
+            selectedCell.setBackground(Color.WHITE); // Đặt lại màu nền
+        }
     }
 
     
